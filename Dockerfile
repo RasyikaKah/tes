@@ -4,21 +4,15 @@ WORKDIR /app
 
 RUN apt-get update && apt-get install -y \
     unzip curl git zip \
-    libzip-dev nodejs npm
+    libzip-dev
 
 RUN docker-php-ext-install pdo pdo_mysql
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# penting: copy package.json dulu
-COPY package.json package-lock.json ./
-RUN npm install
-
 COPY . .
 
 RUN composer install --no-dev --optimize-autoloader
-
-RUN npm run build
 
 EXPOSE 10000
 
